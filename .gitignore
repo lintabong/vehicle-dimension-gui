@@ -1,0 +1,9 @@
+__pycache__
+.venv
+.vscode
+
+.env
+
+test0.py
+test1.py
+test2.py
