@@ -1,6 +1,7 @@
 import os
 import pyrebase
 
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,3 +29,29 @@ class Firebase():
 
         self.conn = pyrebase.initialize_app(firebaseConfig)
         self.db   = self.conn.database()
+
+    def get_config(self):
+        config = self.db.child("config").get().val()
+
+        distance_length = int(config["distance_length"])
+        distance_width  = int(config["distance_width"])
+        return distance_length, distance_width
+    
+    def set_config(self, dl, dw):
+        data = {
+            "distance_length": dl,
+            "distance_width": dw
+        }
+
+        self.db.child("config").set(data)
+
+    def upload_data(self, path, lenght, weight, height, wheels):
+        data = {
+            "at": str(datetime.now().replace(microsecond=0)),
+            "l": lenght,
+            "w": weight,
+            "h": height,
+            "wheels": wheels,
+        }
+
+        self.db.child("dimension").child(path).push(data)
